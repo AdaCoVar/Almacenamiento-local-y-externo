@@ -1,5 +1,6 @@
 package mx.edu.ittepic.adacova.u1p2_almacenamientoarchivos.ui.home
 
+import android.app.Activity
 import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.text.InputType
@@ -146,29 +147,43 @@ class HomeFragment : Fragment(), CustomAdapter.OnItemClickListener {
     }
    private fun archivo(){
 
-        val outputStreamWriter = OutputStreamWriter(
+      /*  val outputStreamWriter = OutputStreamWriter(
             requireContext().openFileOutput("archivo.txt", MODE_PRIVATE)
-        )
-        var cadena = binding.pedidos.text.toString()+"\n" + binding.mesas.text.toString()
-        outputStreamWriter.write(cadena)
-        outputStreamWriter.flush()
-        outputStreamWriter.close()
-        Toast.makeText(requireContext(), "Archivado",Toast.LENGTH_SHORT).show()
-    }
+        )*/
+       val archivo2 = OutputStreamWriter(requireActivity().openFileOutput("archivo.txt",0))
+       var cadena = binding.pedidos.text.toString()+"\n"+binding.mesas.text.toString()
+
+       archivo2.write(cadena)
+       archivo2.flush()
+       archivo2.close()
+
+       Toast.makeText(requireContext(), "Archivado",Toast.LENGTH_SHORT).show()
+       /*var cadena = binding.pedidos.text.toString()+"\n" + binding.mesas.text.toString()
+    outputStreamWriter.write(cadena)
+    outputStreamWriter.flush()
+    outputStreamWriter.close()
+    Toast.makeText(requireContext(), "Archivado",Toast.LENGTH_SHORT).show()*/
+         }
 
     private fun leerArchivo(){
         try{
-            val archivo = BufferedReader(InputStreamReader(requireContext().openFileInput("archivo.txt")))
-            var cadena = ""
-
-            archivo.forEachLine {
-                cadena+= archivo.readLine()
+            val archivo2 = BufferedReader(InputStreamReader(requireActivity().openFileInput("archivo.txt")))
+         //   val archivo = BufferedReader(InputStreamReader(requireContext().openFileInput("archivo.txt")))
+            var br= BufferedReader(archivo2)
+            var linea = br.readLine()
+            val cadena = StringBuilder()
+            while (linea != null) {
+                cadena.append(linea + "\n")
+                linea = br.readLine()
             }
 
-
-            archivo.close()
-
             AlertDialog.Builder(requireContext()).setMessage(cadena).show()
+            br.close()
+            archivo2.close()
+
+
+
+
         }catch (e:Exception){
             AlertDialog.Builder(requireContext()).setMessage(e.message).show()
 
@@ -178,6 +193,7 @@ class HomeFragment : Fragment(), CustomAdapter.OnItemClickListener {
 
             override  fun onItemClick(position: Int) {
            //    val intent = Intent(requireContext(), ::class)
+                leerArchivo()
         Toast.makeText(requireContext(),"Has marcado el pedido",Toast.LENGTH_SHORT).show()
         val clickedItem =  lista[position]
         clickedItem.text1 = "Orden $position entregada"
